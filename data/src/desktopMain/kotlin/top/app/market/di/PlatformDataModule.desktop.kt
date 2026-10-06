@@ -3,6 +3,8 @@
 import top.app.market.data.download.PlatformDownloadDataSource
 import top.app.market.data.local.PreferencesDataSource
 import top.app.market.data.local.PreferencesDataSourceImpl
+import top.app.market.data.music.DesktopMusicFileStore
+import top.app.market.data.music.MusicFileStore
 import top.app.market.data.platform.DesktopThemePlatformPreferences
 import top.app.market.data.platform.ThemePlatformPreferences
 import top.app.market.data.platform.createHttpClient
@@ -43,4 +45,5 @@ internal actual val platformDataModule: Module = module {
     singleOf(::DesktopInstallerDiscoveryRepositoryImpl) { bind<InstallerDiscoveryRepository>() }
     single { DesktopPackageDownloader(get()) }
     singleOf(::DesktopDownloadDataSource) { bind<PlatformDownloadDataSource>() }
+    singleOf(::DesktopMusicFileStore) { bind<MusicFileStore>() }
 }

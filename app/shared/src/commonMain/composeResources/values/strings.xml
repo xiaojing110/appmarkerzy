@@ -5,6 +5,7 @@
     <string name="nav_games">Games</string>
     <string name="nav_apps">Apps</string>
     <string name="nav_updates">Updates</string>
+    <string name="nav_music">Music</string>
     <string name="nav_search">Search</string>
     <string name="nav_settings">Settings</string>
 
@@ -320,6 +321,9 @@
     <string name="saved_packages_summary">Manage downloaded APK installers</string>
     <string name="no_saved_packages">No saved installers</string>
     <string name="settings_section_download_install">Downloads &amp; installs</string>
+    <string name="settings_section_music">Music</string>
+    <string name="settings_music_tab">Music tab</string>
+    <string name="settings_music_tab_summary">Show the Music tab in the bottom navigation</string>
     <string name="settings_search">Search settings</string>
     <string name="settings_search_no_results">No matching settings</string>
     <string name="downloading_apps">Active downloads</string>
@@ -339,4 +343,14 @@
     <string name="image_saved">Saved to Pictures/AppMarket</string>
     <string name="image_save_failed">Could not save the image</string>
     <string name="image_save_unsupported">Saving images is only available on Android</string>
+    <!-- Music -->
+    <string name="music_search_hint">Search songs</string>
+    <string name="music_hot_keywords">Trending</string>
+    <string name="music_empty_tips">Search by keyword, or tap a trending search</string>
+    <string name="music_choose_quality">Choose quality</string>
+    <string name="music_download">Download</string>
+    <string name="music_downloading">Downloading</string>
+    <string name="music_downloaded">Downloaded</string>
+    <string name="music_download_done">Saved to</string>
+    <string name="music_download_failed">Download failed</string>
 </resources>

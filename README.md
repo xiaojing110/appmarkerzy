@@ -57,6 +57,7 @@
 - **历史版本回退**：接入海量应用历史库，支持按版本追溯并下载历史版本 APK。
 - **设备指纹与机型模拟**：内置预设及自定义 `MarketProfile`（机型、Android 版本、SDK、分辨率、区域等），解决特定厂商或生态专属应用不可见问题。
 - **系统生态深度优化**：支持小米 HyperOS 超级岛优化、焦点通知优化等。
+- **音乐下载（移植自 HotDownloader）**：底部导航新增「音乐」页签（设置里可开关，默认开启），聚合酷我音源的关键词 / 热搜搜索、音质选择与断点无关的直链下载，音频直接落盘到系统下载目录。
 - **多语言**：简体中文、繁体中文（台湾 / 香港）、English，应用内可独立切换语言，不受系统语言限制。
 - **跨平台一致体验**：基于 Compose Multiplatform 打造，同时支持 Android 移动端与桌面端（Windows / macOS / Linux）。
 
@@ -217,6 +218,7 @@ AppMarket 能解析各家应用商店的应用详情链接，并在应用内打�
 - [HiddenApiBypass](https://github.com/LSPosed/AndroidHiddenApiBypass) - Android 非公开 API 限制绕过方案
 - [HDiffPatch](https://github.com/sisong/HDiffPatch) - 高性能差分与补丁还原库
 - [HyperNotification](https://github.com/xzakota/HyperNotification) - 小米澎湃焦点通知与超级岛适配支持
+- [HotDownloader](https://github.com/lerdb/HotDownloader) - 「音乐」页签的音源与下载逻辑移植自该项目（Apache-2.0）
 
 ---
 

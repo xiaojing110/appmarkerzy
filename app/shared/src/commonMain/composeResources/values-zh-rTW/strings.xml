@@ -5,6 +5,7 @@
     <string name="nav_games">遊戲</string>
     <string name="nav_apps">應用程式</string>
     <string name="nav_updates">更新</string>
+    <string name="nav_music">音樂</string>
     <string name="nav_search">搜尋</string>
     <string name="nav_settings">設定</string>
 
@@ -310,6 +311,9 @@
     <string name="saved_packages_summary">管理已下載的安裝包</string>
     <string name="no_saved_packages">暫無儲存的安裝包</string>
     <string name="settings_section_download_install">下載與安裝</string>
+    <string name="settings_section_music">音樂</string>
+    <string name="settings_music_tab">音樂分頁</string>
+    <string name="settings_music_tab_summary">在底部導覽列顯示「音樂」入口</string>
     <string name="settings_search">搜尋設定</string>
     <string name="settings_search_no_results">沒有符合的設定</string>
     <string name="downloading_apps">下載中的應用程式</string>
@@ -329,4 +333,14 @@
     <string name="image_saved">已儲存到 Pictures/AppMarket</string>
     <string name="image_save_failed">儲存圖片失敗</string>
     <string name="image_save_unsupported">儲存圖片僅在 Android 上可用</string>
+    <!-- Music -->
+    <string name="music_search_hint">搜尋歌曲</string>
+    <string name="music_hot_keywords">熱搜</string>
+    <string name="music_empty_tips">輸入關鍵詞搜尋歌曲，或點擊熱搜開始</string>
+    <string name="music_choose_quality">選擇音質</string>
+    <string name="music_download">下載</string>
+    <string name="music_downloading">下載中</string>
+    <string name="music_downloaded">已下載</string>
+    <string name="music_download_done">已儲存到</string>
+    <string name="music_download_failed">下載失敗</string>
 </resources>

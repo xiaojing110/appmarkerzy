@@ -8,6 +8,7 @@ import top.app.market.viewmodel.HistoricalVersionsViewModel
 import top.app.market.viewmodel.IgnoredAppsViewModel
 import top.app.market.viewmodel.InstallerSettingsViewModel
 import top.app.market.viewmodel.ManualUpdateViewModel
+import top.app.market.viewmodel.MusicViewModel
 import top.app.market.viewmodel.SavedPackagesViewModel
 import top.app.market.viewmodel.SearchViewModel
 import top.app.market.viewmodel.ThemeSettingsViewModel
@@ -22,6 +23,7 @@ val viewModelModule = module {
     viewModelOf(::ThemeSettingsViewModel)
     viewModelOf(::UpdateHistoryViewModel)
     viewModelOf(::SearchViewModel)
+    viewModelOf(::MusicViewModel)
     viewModelOf(::SavedPackagesViewModel)
     viewModelOf(::DownloadingAppsViewModel)
     viewModelOf(::ManualUpdateViewModel)

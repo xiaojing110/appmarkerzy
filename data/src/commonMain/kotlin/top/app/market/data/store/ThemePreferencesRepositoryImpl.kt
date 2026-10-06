@@ -41,6 +41,8 @@ internal class ThemePreferencesRepositoryImpl(
     override val pageScale: StateFlow<Float> = _pageScale.asStateFlow()
     private val _enabledTabs = MutableStateFlow(DEFAULT_TABS)
     override val enabledTabs: StateFlow<Set<String>> = _enabledTabs.asStateFlow()
+    private val _musicTabEnabled = MutableStateFlow(ThemePreferenceKeys.MusicTabEnabled.default)
+    override val musicTabEnabled: StateFlow<Boolean> = _musicTabEnabled.asStateFlow()
     private val _appLanguage = MutableStateFlow<String?>(null)
     override val appLanguage: StateFlow<String?> = _appLanguage.asStateFlow()
     private val _colorMode = MutableStateFlow(ThemeColorMode.SYSTEM)
@@ -80,6 +82,9 @@ internal class ThemePreferencesRepositoryImpl(
             },
             observe("enabledTabs", preferences.observe(ThemePreferenceKeys.EnabledTabs)) { raw ->
                 _enabledTabs.value = parseTabs(raw)
+            },
+            observe("musicTabEnabled", preferences.observe(ThemePreferenceKeys.MusicTabEnabled)) {
+                _musicTabEnabled.value = it
             },
             observe("appLanguage", preferences.observe(ThemePreferenceKeys.AppLanguage)) {
                 _appLanguage.value = it
@@ -151,6 +156,9 @@ internal class ThemePreferencesRepositoryImpl(
         val safe = if (value.isEmpty()) DEFAULT_TABS else value
         preferences.put(ThemePreferenceKeys.EnabledTabs, safe.joinToString(","))
     }
+
+    override suspend fun setMusicTabEnabled(value: Boolean) =
+        preferences.put(ThemePreferenceKeys.MusicTabEnabled, value)
 
     override suspend fun setAppLanguage(value: String?) {
         if (value.isNullOrBlank()) {

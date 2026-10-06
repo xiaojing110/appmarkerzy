@@ -52,3 +52,20 @@ full-package fallback and patch metadata. `data/androidMain` downloads and verif
 temporary workspace, synthesizes and verifies the complete APK, then streams that APK through the
 same installer/Download outputs used by full-package requests. Split APK updates always use their
 full artifacts.
+
+## Music (ported from HotDownloader)
+
+The `音乐` main tab bundles a music search/download feature whose source logic is ported from
+[HotDownloader](https://github.com/lerdb/HotDownloader) (Apache-2.0) — see
+`data/commonMain/.../data/remote/music/KuwoMusicApi.kt`.
+
+- `domain` owns the neutral models (`MusicSong`, `MusicQuality`, `MusicDownloadRequest`) and the
+  `MusicRepository` / `MusicDownloadRepository` contracts.
+- `data` implements the Kuwo source (search / hot keywords / cover / direct link) and streams the
+  audio through `MusicFileStore`, an internal sink abstraction: Android writes to
+  `Download/AppMarket/Music` via MediaStore (pending flow on Q+), desktop writes to
+  `~/Downloads/AppMarket/Music`.
+- Only plaintext qualities are exposed. Encrypted Kuwo formats (`mflac` / `mgg`) are filtered at
+  parse time because they need the ekey/QMC decryption chain, which is out of the port scope.
+- The tab is gated by the `music_tab_enabled` preference (default on, settable in Settings); the
+  tab set is assembled in `MainScreen.kt` alongside the `enabledTabs`-driven tabs.

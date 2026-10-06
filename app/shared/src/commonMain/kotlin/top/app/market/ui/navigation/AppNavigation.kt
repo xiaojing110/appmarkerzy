@@ -32,6 +32,7 @@ import top.app.market.viewmodel.HistoricalVersionsViewModel
 import top.app.market.viewmodel.IgnoredAppsViewModel
 import top.app.market.viewmodel.InstallerSettingsViewModel
 import top.app.market.viewmodel.ManualUpdateViewModel
+import top.app.market.viewmodel.MusicViewModel
 import top.app.market.viewmodel.SavedPackagesViewModel
 import top.app.market.viewmodel.SearchViewModel
 import top.app.market.viewmodel.ThemeSettingsViewModel
@@ -62,6 +63,7 @@ fun AppNavigation(
 
     val updatesViewModel = koinViewModel<UpdatesViewModel>()
     val searchViewModel = koinViewModel<SearchViewModel>()
+    val musicViewModel = koinViewModel<MusicViewModel>()
     val installerSettingsViewModel = koinViewModel<InstallerSettingsViewModel>()
     val todayViewModel = koinViewModel<TodayViewModel>()
     val categoryViewModel = koinViewModel<CategoryViewModel>()
@@ -109,6 +111,7 @@ fun AppNavigation(
                     navigator = navigator,
                     updatesViewModel = updatesViewModel,
                     searchViewModel = searchViewModel,
+                    musicViewModel = musicViewModel,
                     installerSettingsViewModel = installerSettingsViewModel,
                     todayViewModel = todayViewModel,
                     categoryViewModel = categoryViewModel,

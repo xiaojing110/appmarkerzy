@@ -17,6 +17,8 @@ interface ThemePreferencesRepository {
     val enablePredictiveBack: StateFlow<Boolean>
     val pageScale: StateFlow<Float>
     val enabledTabs: StateFlow<Set<String>>
+    /** 底部导航是否显示「音乐」页签（默认开启）。 */
+    val musicTabEnabled: StateFlow<Boolean>
     val appLanguage: StateFlow<String?>
     val colorMode: StateFlow<ThemeColorMode>
 
@@ -36,6 +38,7 @@ interface ThemePreferencesRepository {
     suspend fun setEnablePredictiveBack(value: Boolean)
     suspend fun setPageScale(value: Float)
     suspend fun setEnabledTabs(value: Set<String>)
+    suspend fun setMusicTabEnabled(value: Boolean)
     suspend fun setAppLanguage(value: String?)
     suspend fun setColorMode(value: ThemeColorMode)
     suspend fun setColorSource(value: ThemeColorSource)

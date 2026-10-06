@@ -1,11 +1,13 @@
 ﻿package top.app.market.di
 
 import top.app.market.data.download.RecordingDownloadRepositoryImpl
+import top.app.market.data.music.MusicDownloadRepositoryImpl
 import top.app.market.data.platform.debugLog
 import top.app.market.data.remote.honor.HonorApi
 import top.app.market.data.remote.honor.HonorProtocol
 import top.app.market.data.remote.huawei.HuaweiApi
 import top.app.market.data.remote.huawei.HuaweiProtocol
+import top.app.market.data.remote.music.KuwoMusicApi
 import top.app.market.data.remote.oppo.OppoApi
 import top.app.market.data.remote.samsung.SamsungApi
 import top.app.market.data.remote.taptap.TapTapApi
@@ -25,6 +27,7 @@ import top.app.market.data.repository.HuaweiRepositoryImpl
 import top.app.market.data.repository.MarketLinkResolverImpl
 import top.app.market.data.repository.MarketRepositoryImpl
 import top.app.market.data.repository.MarketSourceRepositoryImpl
+import top.app.market.data.repository.MusicRepositoryImpl
 import top.app.market.data.repository.OppoRepositoryImpl
 import top.app.market.data.repository.ProfileRepositoryImpl
 import top.app.market.data.repository.SamsungRepositoryImpl
@@ -43,6 +46,8 @@ import top.app.market.domain.repository.HuaweiRepository
 import top.app.market.domain.repository.MarketLinkResolver
 import top.app.market.domain.repository.MarketRepository
 import top.app.market.domain.repository.MarketSourceRepository
+import top.app.market.domain.repository.MusicDownloadRepository
+import top.app.market.domain.repository.MusicRepository
 import top.app.market.domain.repository.OppoRepository
 import top.app.market.domain.repository.ProfileRepository
 import top.app.market.domain.repository.SamsungRepository
@@ -109,6 +114,10 @@ private val commonDataModule = module {
     singleOf(::TapTapApi)
     singleOf(::TapTapRepositoryImpl) { bind<TapTapRepository>() }
     singleOf(::MarketSourceRepositoryImpl) { bind<MarketSourceRepository>() }
+
+    singleOf(::KuwoMusicApi)
+    singleOf(::MusicRepositoryImpl) { bind<MusicRepository>() }
+    singleOf(::MusicDownloadRepositoryImpl) { bind<MusicDownloadRepository>() }
 
     singleOf(::RecordingDownloadRepositoryImpl) { bind<DownloadRepository>() }
 }

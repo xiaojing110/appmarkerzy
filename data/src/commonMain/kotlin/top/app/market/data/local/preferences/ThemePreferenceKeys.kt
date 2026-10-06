@@ -13,6 +13,7 @@ object ThemePreferenceKeys {
     val EnablePredictiveBack = BooleanPreferenceKey(NS, "enable_predictive_back")
     val PageScale = StringPreferenceKey(NS, "page_scale")
     val EnabledTabs = StringPreferenceKey(NS, "enabled_tabs")
+    val MusicTabEnabled = BooleanPreferenceKey(NS, "music_tab_enabled", true)
     val AppLanguage = StringPreferenceKey(NS, "app_language")
     val ColorMode = StringPreferenceKey(NS, "color_mode")
     val ColorSource = StringPreferenceKey(NS, "color_source")

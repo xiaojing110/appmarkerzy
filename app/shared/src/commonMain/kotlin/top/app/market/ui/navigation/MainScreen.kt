@@ -52,6 +52,7 @@ import top.app.market.platform.UiPlatform
 import top.app.market.resources.Res
 import top.app.market.resources.nav_apps
 import top.app.market.resources.nav_games
+import top.app.market.resources.nav_music
 import top.app.market.resources.nav_search
 import top.app.market.resources.nav_settings
 import top.app.market.resources.nav_today
@@ -62,6 +63,7 @@ import top.app.market.ui.component.blur.BlurredBar
 import top.app.market.ui.component.blur.rememberBlurBackdrop
 import top.app.market.domain.model.market.AppCategory
 import top.app.market.ui.screen.CategoryTab
+import top.app.market.ui.screen.MusicTab
 import top.app.market.ui.screen.SearchTab
 import top.app.market.ui.screen.SettingsTab
 import top.app.market.ui.screen.TodayTab
@@ -71,6 +73,7 @@ import top.app.market.ui.theme.LocalEnableFloatingBottomBarBlur
 import top.app.market.ui.theme.LocalEnableNavigationBadge
 import top.app.market.ui.util.rememberIsWideScreen
 import top.app.market.viewmodel.InstallerSettingsViewModel
+import top.app.market.viewmodel.MusicViewModel
 import top.app.market.viewmodel.SearchViewModel
 import top.app.market.viewmodel.CategoryViewModel
 import top.app.market.viewmodel.TodayViewModel
@@ -100,17 +103,19 @@ import top.yukonga.miuix.kmp.icon.extended.Play
 import top.yukonga.miuix.kmp.icon.extended.Search
 import top.yukonga.miuix.kmp.icon.extended.Settings
 import top.yukonga.miuix.kmp.icon.extended.Update
+import top.yukonga.miuix.kmp.icon.extended.VolumeUp
 import top.yukonga.miuix.kmp.theme.MiuixTheme
 import kotlin.math.abs
 
 // 主页签集合按平台能力裁剪：桌面端（无法扫描已装应用 / 安装）不含「更新」。
-private enum class MainTab { Today, Games, Apps, Updates, Search, Settings }
+private enum class MainTab { Today, Games, Apps, Updates, Music, Search, Settings }
 
 @Composable
 fun MainPage(
     navigator: Navigator,
     updatesViewModel: UpdatesViewModel,
     searchViewModel: SearchViewModel,
+    musicViewModel: MusicViewModel,
     installerSettingsViewModel: InstallerSettingsViewModel,
     todayViewModel: TodayViewModel,
     categoryViewModel: CategoryViewModel,
@@ -124,13 +129,15 @@ fun MainPage(
     val enableFloatingBottomBarBlur = LocalEnableFloatingBottomBarBlur.current
     val updatesState by updatesViewModel.uiState.collectAsStateWithLifecycle()
     val enabledTabs by themePreferences.enabledTabs.collectAsStateWithLifecycle()
+    val musicTabEnabled by themePreferences.musicTabEnabled.collectAsStateWithLifecycle()
     val appManagementSupported = uiPlatform.packageInstallationSupported
-    val tabs = remember(appManagementSupported, enabledTabs) {
+    val tabs = remember(appManagementSupported, enabledTabs, musicTabEnabled) {
         buildList {
             if ("today" in enabledTabs) add(MainTab.Today)
             if ("games" in enabledTabs) add(MainTab.Games)
             if ("apps" in enabledTabs) add(MainTab.Apps)
             if (appManagementSupported && "updates" in enabledTabs) add(MainTab.Updates)
+            if (musicTabEnabled) add(MainTab.Music)
             if ("search" in enabledTabs) add(MainTab.Search)
             add(MainTab.Settings)
         }.ifEmpty {
@@ -255,6 +262,11 @@ fun MainPage(
                     viewModel = updatesViewModel,
                     bottomPadding = bottomPadding,
                     onOpenDetail = openDetail,
+                )
+
+                MainTab.Music -> MusicTab(
+                    viewModel = musicViewModel,
+                    bottomPadding = bottomPadding,
                 )
 
                 MainTab.Search -> SearchTab(
@@ -438,6 +450,7 @@ private val MainTab.icon
         MainTab.Games -> MiuixIcons.Play
         MainTab.Apps -> MiuixIcons.Create
         MainTab.Updates -> MiuixIcons.Update
+        MainTab.Music -> MiuixIcons.VolumeUp
         MainTab.Search -> MiuixIcons.Search
         MainTab.Settings -> MiuixIcons.Settings
     }
@@ -448,6 +461,7 @@ private val MainTab.labelRes
         MainTab.Games -> Res.string.nav_games
         MainTab.Apps -> Res.string.nav_apps
         MainTab.Updates -> Res.string.nav_updates
+        MainTab.Music -> Res.string.nav_music
         MainTab.Search -> Res.string.nav_search
         MainTab.Settings -> Res.string.nav_settings
     }

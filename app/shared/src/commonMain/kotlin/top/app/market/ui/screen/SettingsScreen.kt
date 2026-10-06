@@ -89,9 +89,12 @@ import top.app.market.resources.saved_packages
 import top.app.market.resources.saved_packages_summary
 import top.app.market.resources.search_sources
 import top.app.market.resources.search_sources_summary
+import top.app.market.resources.settings_music_tab
+import top.app.market.resources.settings_music_tab_summary
 import top.app.market.resources.settings_search
 import top.app.market.resources.settings_search_no_results
 import top.app.market.resources.settings_section_download_install
+import top.app.market.resources.settings_section_music
 import top.app.market.resources.show_app_comments
 import top.app.market.resources.show_app_comments_summary
 import top.app.market.resources.clipboard_link_detect
@@ -219,6 +222,7 @@ fun SettingsTab(
     val enablePredictiveBack by themePreferences.enablePredictiveBack.collectAsStateWithLifecycle()
     val themeColorSpec by themePreferences.colorSpec.collectAsStateWithLifecycle()
     val amoledDark by themePreferences.amoledDark.collectAsStateWithLifecycle()
+    val musicTabEnabled by themePreferences.musicTabEnabled.collectAsStateWithLifecycle()
     val themeSeedColor by themePreferences.seedColor.collectAsStateWithLifecycle()
     var searchQuery by rememberSaveable { mutableStateOf("") }
     var searchExpanded by rememberSaveable { mutableStateOf(false) }
@@ -235,6 +239,7 @@ fun SettingsTab(
     val searchEntries = settingsSearchEntries(
         appManagementSupported = appManagementSupported,
         enabledTabs = enabledTabs,
+        musicTabEnabled = musicTabEnabled,
         updatesViewModel = updatesViewModel,
         updatesState = updatesState,
         installerSettingsViewModel = installerSettingsViewModel,
@@ -515,6 +520,19 @@ fun SettingsTab(
                         }
                     }
                 }
+                item { SectionTitle(text = stringResource(Res.string.settings_section_music)) }
+                item {
+                    Card(modifier = Modifier.fillMaxWidth().padding(horizontal = 12.dp)) {
+                        SwitchPreference(
+                            title = stringResource(Res.string.settings_music_tab),
+                            summary = stringResource(Res.string.settings_music_tab_summary),
+                            checked = musicTabEnabled,
+                            onCheckedChange = { value ->
+                                coroutineScope.launch { themePreferences.setMusicTabEnabled(value) }
+                            },
+                        )
+                    }
+                }
                 item { SectionTitle(text = stringResource(Res.string.general)) }
                 item {
                     // 桌面端无「更新」页，且根据用户启用的分頁相應剔除
@@ -665,6 +683,7 @@ private fun switchEntry(
 private fun settingsSearchEntries(
     appManagementSupported: Boolean,
     enabledTabs: Set<String>,
+    musicTabEnabled: Boolean,
     updatesViewModel: UpdatesViewModel,
     updatesState: UpdatesUiState,
     installerSettingsViewModel: InstallerSettingsViewModel,
@@ -736,6 +755,14 @@ private fun settingsSearchEntries(
     val predictiveBackSupported = isPredictiveBackSupported()
 
     return buildList {
+        add(
+            switchEntry(
+                title = stringResource(Res.string.settings_music_tab),
+                summary = stringResource(Res.string.settings_music_tab_summary),
+                checked = musicTabEnabled,
+                scope = coroutineScope,
+            ) { themePreferences.setMusicTabEnabled(it) }
+        )
         add(
             SettingsSearchEntry.Dropdown(
                 title = stringResource(Res.string.today_source),

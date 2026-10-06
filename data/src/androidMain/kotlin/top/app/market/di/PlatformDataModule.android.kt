@@ -24,6 +24,8 @@ import top.app.market.data.install.storage.SavedPackageIndex
 import top.app.market.data.install.task.InstallTaskStore
 import top.app.market.data.local.PreferencesDataSource
 import top.app.market.data.local.PreferencesDataSourceImpl
+import top.app.market.data.music.AndroidMusicFileStore
+import top.app.market.data.music.MusicFileStore
 import top.app.market.data.platform.AndroidThemePlatformPreferences
 import top.app.market.data.platform.ThemePlatformPreferences
 import top.app.market.data.platform.createAndroidHttpClient
@@ -67,6 +69,7 @@ internal actual val platformDataModule: Module = module {
 
     singleOf(::InstallTaskStore)
     singleOf(::SavedPackageIndex)
+    singleOf(::AndroidMusicFileStore) { bind<MusicFileStore>() }
     singleOf(::MediaStorePackageStore)
     singleOf(::ArtifactStagingStore)
     singleOf(::InstallHttpClient)
