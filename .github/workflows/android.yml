@@ -11,11 +11,12 @@ on:
       - "doc/*"
       - ".github/workflows/android.yml"
 
+permissions:
+  contents: write
+
 jobs:
   build:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
 
     steps:
       - name: Checkout Repository
@@ -32,28 +33,43 @@ jobs:
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v6
 
-      - name: Decode Signing Key
-        run: echo ${{ secrets.SIGNING_KEY }} | base64 -d > keystore.jks
-
-      - name: Verify Tag Matches Version
-        if: ${{ startsWith(github.ref, 'refs/tags/') }}
+      - name: Generate Keystore
         run: |
-          VERSION=$(grep '^APP_VERSION_NAME=' gradle.properties | cut -d= -f2)
-          if [ "$GITHUB_REF_NAME" != "v$VERSION" ]; then
-            echo "Tag $GITHUB_REF_NAME does not match APP_VERSION_NAME=$VERSION in gradle.properties"
-            exit 1
-          fi
+          keytool -genkeypair -v \
+            -keystore ${{ github.workspace }}/keystore.jks \
+            -alias appmarket \
+            -keyalg RSA \
+            -keysize 4096 \
+            -validity 10000 \
+            -storetype JKS \
+            -storepass appmarket123 \
+            -keypass appmarket123 \
+            -dname "CN=AppMarket, OU=Dev, O=AppMarket, L=City, ST=State, C=CN"
 
       - name: Build Release APK
         run: |
           ./gradlew :app:android:assembleRelease
           echo "APK_FILE=$(find app/android/build/outputs/apk/release -name '*.apk' | head -n 1)" >> $GITHUB_ENV
         env:
-          COMMIT_ID: ${{ !startsWith(github.ref, 'refs/tags/') && github.sha || '' }}
           KEYSTORE_PATH: ${{ github.workspace }}/keystore.jks
-          KEYSTORE_PASS: ${{ secrets.KEY_PASSWORD }}
-          KEY_ALIAS: ${{ secrets.ALIAS }}
-          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+          KEYSTORE_PASS: appmarket123
+          KEY_ALIAS: appmarket
+          KEY_PASSWORD: appmarket123
+
+      - name: Generate Changelog
+        id: changelog
+        run: |
+          PREV_TAG=$(git describe --tags --abbrev=0 HEAD^ 2>/dev/null || echo "")
+          if [ -z "$PREV_TAG" ]; then
+            LOG=$(git log --pretty=format:"- %s (%h)" -n 20)
+          else
+            LOG=$(git log ${PREV_TAG}..HEAD --pretty=format:"- %s (%h)")
+          fi
+          {
+            echo "changelog<<EOF"
+            echo "$LOG"
+            echo "EOF"
+          } >> $GITHUB_OUTPUT
 
       - name: Upload APK Artifact
         if: ${{ !startsWith(github.ref, 'refs/tags/') }}
@@ -61,6 +77,25 @@ jobs:
         with:
           path: ${{ env.APK_FILE }}
           archive: false
+
+      - name: Publish to GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ startsWith(github.ref, 'refs/tags/') && github.ref_name || format('build-{0}', github.run_number) }}
+          name: ${{ startsWith(github.ref, 'refs/tags/') && github.ref_name || format('Build {0}', github.run_number) }}
+          body: |
+            ## 更新历史
+
+            ${{ steps.changelog.outputs.changelog }}
+
+            ---
+
+            **构建信息**
+            - Commit: `${{ github.sha }}`
+            - 分支/Tag: `${{ github.ref_name }}`
+            - 触发者: @${{ github.actor }}
+          files: ${{ env.APK_FILE }}
+          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Display APK Hashes
         run: |
@@ -70,15 +105,3 @@ jobs:
           echo "| SHA256 | \`$(sha256sum "$APK_FILE" | awk '{ print $1 }')\` |" >> $GITHUB_STEP_SUMMARY
           echo "| SHA1 | \`$(sha1sum "$APK_FILE" | awk '{ print $1 }')\` |" >> $GITHUB_STEP_SUMMARY
           echo "| MD5 | \`$(md5sum "$APK_FILE" | awk '{ print $1 }')\` |" >> $GITHUB_STEP_SUMMARY
-
-      - name: Publish Release
-        if: ${{ startsWith(github.ref, 'refs/tags/') }}
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          TAG="${GITHUB_REF_NAME}"
-          if gh release view "$TAG" >/dev/null 2>&1; then
-            gh release upload "$TAG" "$APK_FILE" --clobber
-          else
-            gh release create "$TAG" "$APK_FILE" --title "$TAG" --generate-notes
-          fi
