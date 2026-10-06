@@ -26,6 +26,9 @@ import kotlin.random.Random
  * 的 `crates/hotdownloader-core/src/platforms/kuwo`，仅保留免登录可用的
  * 搜索 / 热搜 / 封面 / 下载直链能力；加密格式（mflac / mgg）因需要 ekey 解密与
  * QMC 解密链路而在解析阶段直接过滤，只保留明文音质。
+ *
+ * 与原仓库的唯一差异：全部走 https（原仓库为 http）。Android 网络安全策略默认
+ * 禁止明文流量，酷我各站（接口 / 下载 CDN / 封面 CDN）均已验证支持 https。
  */
 internal class KuwoMusicApi(
     private val client: HttpClient,
@@ -109,8 +112,8 @@ internal class KuwoMusicApi(
                 errorLabel = "酷我封面",
             )
         }.getOrNull() ?: return null
-        val trimmed = text.trim()
-        return trimmed.takeIf { it.startsWith("http://") || it.startsWith("https://") }
+        val trimmed = text.trim().upgradeToHttps()
+        return trimmed.takeIf { it.startsWith("https://") || it.startsWith("http://") }
     }
 
     /**
@@ -163,7 +166,7 @@ internal class KuwoMusicApi(
         }
         val url = data["url"].asString().orEmpty()
         if (url.isEmpty()) throw MarketException("下载链接为空")
-        return url
+        return url.upgradeToHttps()
     }
 
     private fun parseObject(text: String, errorLabel: String): JsonObject =
@@ -182,8 +185,8 @@ internal class KuwoMusicApi(
             "${key.encodeURLParameter()}=${value.encodeURLParameter()}"
         }
         val response = try {
-            client.get("http://$host$path?$query") {
-                userAgent?.let { header(HttpHeaders.UserAgent, it) }
+            client.get("https://$host$path?$query") {
+                header(HttpHeaders.UserAgent, userAgent ?: DEFAULT_USER_AGENT)
                 referer?.let { header(HttpHeaders.Referrer, it) }
             }
         } catch (error: Throwable) {
@@ -197,6 +200,14 @@ internal class KuwoMusicApi(
 }
 
 private const val KUWO_REFERER = "http://www.kuwo.cn/"
+
+/** 原仓库共享 CLIENT 的默认 UA；未单独指定 UA 的请求（如封面）使用它。 */
+private const val DEFAULT_USER_AGENT =
+    "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.198 Safari/537.36"
+
+/** Android 禁止明文流量，接口返回的 http 直链统一升级为 https（酷我 CDN 已验证支持）。 */
+private fun String.upgradeToHttps(): String =
+    if (startsWith("http://")) "https://" + removePrefix("http://") else this
 
 private const val ARTIST_SEPARATOR = "、"
 

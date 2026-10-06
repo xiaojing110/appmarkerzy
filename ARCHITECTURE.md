@@ -65,6 +65,11 @@ The `音乐` main tab bundles a music search/download feature whose source logic
   audio through `MusicFileStore`, an internal sink abstraction: Android writes to
   `Download/AppMarket/Music` via MediaStore (pending flow on Q+), desktop writes to
   `~/Downloads/AppMarket/Music`.
+- Requests mirror HotDownloader's parameter/header contract exactly; the only deliberate deviation
+  is transport: everything (API, download CDN, cover CDN) is upgraded to HTTPS because Android's
+  network security policy rejects cleartext (`CLEARTEXT communication … not permitted`).
+- Link resolution keeps HotDownloader's "auto-fallback": if the requested quality is missing or its
+  link cannot be resolved, the remaining qualities are tried in list order until one succeeds.
 - Only plaintext qualities are exposed. Encrypted Kuwo formats (`mflac` / `mgg`) are filtered at
   parse time because they need the ekey/QMC decryption chain, which is out of the port scope.
 - The tab is gated by the `music_tab_enabled` preference (default on, settable in Settings); the
