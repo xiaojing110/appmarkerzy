@@ -1,0 +1,13 @@
+object ProjectConfig {
+    const val APP_NAME = "AppMarket"
+    const val PACKAGE_NAME = "top.app.market"
+    const val APPLICATION_ID = "top.nkbe.appmarket"
+    const val JVM_VERSION = 21
+
+    object Android {
+        const val MIN_SDK = 26
+        const val TARGET_SDK = 37
+        const val COMPILE_SDK = 37
+        const val COMPILE_SDK_MINOR = 2
+    }
+}

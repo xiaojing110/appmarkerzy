@@ -1,0 +1,32 @@
+# gradle
+!gradle/wrapper/gradle-wrapper.jar
+.gradle/
+build/
+out/
+local.properties
+*.log
+output.json
+
+# kotlin
+.kotlin/
+kotlin-js-store/
+
+# IntelliJ
+*.iml
+.idea_modules/
+.idea/*
+!.idea/.gitignore
+!.idea/AndroidProjectSystem.xml
+!.idea/deviceManager.xml
+!.idea/inspectionProfiles/
+!.idea/kotlinc.xml
+!.idea/runConfigurations.xml
+release/
+debug/
+*.apk
+
+# signing
+*.jks
+
+# macOS
+.DS_Store
